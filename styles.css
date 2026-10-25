@@ -1,0 +1,67 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    border: 0.1rem solid black;
+    text-align: center;
+    background-color: rgb(250, 217, 174);
+    margin: 0;
+    font-size: 5rem;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri,;
+}
+
+#search-form {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+    gap: 2rem;
+}
+
+#word-display {
+    padding: 1rem;
+    margin: 1rem;
+    height: 45rem;
+    border-radius: 0.5rem;
+    font-size: 1.5rem;
+    border: 1px solid black;
+    background-color: rgb(251, 228, 201);
+}
+
+#input-display {
+    border: 0.1rem solid black;
+    border-radius: 0.2rem;
+    font-size: larger;
+    width: 25rem;
+    background-color: rgb(216, 230, 242);
+}
+
+#submit-button {
+    border: 0.12rem solid black;
+    font-size: larger;
+    color: white;
+    background-color: blue;
+    border-radius: 0.2rem;
+}
+
+#error-message {
+    width: 100%;
+    background-color: red;
+    color: white;
+    text-align: center;
+    max-width: 110rem;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: larger;
+    border-radius: 0.2rem;
+    
+}
+
+#display-window {
+    border: 0.1rem solid black;
+    padding: 1rem;
+    margin: 1rem;
+    height: 50rem;
+    border-radius: 0.5rem;
+    background-color: rgb(250, 217, 174);
+}
