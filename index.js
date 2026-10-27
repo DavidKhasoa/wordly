@@ -48,7 +48,7 @@ function displayWords(data) {
     phonetic.textContent = data.phonetics.text || "";
 
     const definition = document.createElement("p");
-    definition.textContent = data.definitions[0];
+    definition.textContent = data.definitions;
 
     const synonyms = document.createElement("p");
     synonyms.textContent = data.synonyms.length
