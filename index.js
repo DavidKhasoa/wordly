@@ -58,12 +58,17 @@ function displayWords(data) {
     display.append(title, phonetic, definition, synonyms)
 }
 
+function clearDisplayWords() {
+  display.innerHTML = "";
+}
+
 async function fetchWords(word) {
 
     const query = word.trim();
 
     if(!query) {
         showError("Please input a valid word!")
+        clearDisplayWords()
         return;
     };
 
