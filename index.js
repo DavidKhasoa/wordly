@@ -18,8 +18,13 @@ function closeError() {
 
 function flatten(data) {
   const [entry] = data;
+  const allPhonetics = data.flatMap((e) => e.phonetics);
   const phonetics =
-    entry.phonetics.find((p) => p.audio) || entry.phonetics[0] || {};
+    entry.phonetics.find((p) => p.audio) || allPhonetics[0] || {};
+
+  const audio = phonetics.audio?.startsWith("//")
+    ? `https:${phonetics.audio}`
+    : phonetics.audio || "";
 
   return {
     word: entry.word,
@@ -34,7 +39,8 @@ function flatten(data) {
         ])
       ),
     ],
-    phonetics,
+    phonetic: entry.phonetic || phonetics.text || allPhonetics.find((p) => p.text)?.text || "",
+    audio,
   };
 }
 
@@ -45,17 +51,32 @@ function displayWords(data) {
     title.textContent = data.word;
 
     const phonetic = document.createElement("p");
-    phonetic.textContent = data.phonetics.text || "";
+    phonetic.textContent = data.phonetic || "";
 
     const definition = document.createElement("p");
     definition.textContent = data.definitions;
 
     const synonyms = document.createElement("p");
     synonyms.textContent = data.synonyms.length
-        ? `Synonyms: ${data.synonyms.join(", ")}`
-        : "No synonyms found";
+      ? `Synonyms: ${data.synonyms.join(", ")}`
+      : "No synonyms found";
+    
+    display.append(title, phonetic)
 
-    display.append(title, phonetic, definition, synonyms)
+    if (data.audio) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = "Audio";
+      button.addEventListener("click", () => {
+        new Audio(data.audio).play().catch((err) => {
+          console.error(err);
+          showError("Couldn't play the audio for this word.");
+        });
+      });
+      display.append(button);
+    }
+
+    display.append(definition, synonyms)
 }
 
 function clearDisplayWords() {
@@ -77,7 +98,6 @@ async function fetchWords(word) {
         const data = await response.json()
         console.log(data)
         if(!response.ok) {
-            const err = await response.json().catch(() => ({}));
             throw new Error(data.message || data.title || "Word not found")
         }
         

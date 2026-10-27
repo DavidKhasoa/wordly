@@ -27,6 +27,7 @@ h1 {
     font-size: 1.5rem;
     border: 1px solid black;
     background-color: rgb(251, 228, 201);
+    height: 100%;
 }
 
 #input-display {
@@ -64,4 +65,13 @@ h1 {
     height: 50rem;
     border-radius: 0.5rem;
     background-color: rgb(250, 217, 174);
+    height: 100%;
+}
+
+#word-display button {
+    color: white;
+    background-color: green;
+    font-size: large;
+    border-radius: 0.15rem;
+    border: 0.12rem solid black;
 }
