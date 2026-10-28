@@ -1,7 +1,6 @@
 const wordsApi = "https://api.dictionaryapi.dev/api/v2/entries/en";
 
 const input = document.getElementById("input-display")
-const wordSearch = document.getElementById("submit-button")
 const errorMessage = document.getElementById("error-message")
 const display = document.getElementById("word-display")
 const form = document.getElementById("search-form")
@@ -39,44 +38,57 @@ function flatten(data) {
         ])
       ),
     ],
+    word: entry.word,
     phonetic: entry.phonetic || phonetics.text || allPhonetics.find((p) => p.text)?.text || "",
     audio,
+    meanings: entry.meanings,
   };
 }
 
 function displayWords(data) {
-    display.innerHTML = "";
+  display.innerHTML = "";
 
-    const title = document.createElement("h2");
-    title.textContent = data.word;
+  const title = document.createElement("h2");
+  title.textContent = data.word;
 
-    const phonetic = document.createElement("p");
-    phonetic.textContent = data.phonetic || "";
+  const phonetic = document.createElement("p");
+  phonetic.textContent = data.phonetic || "";
 
-    const definition = document.createElement("p");
-    definition.textContent = data.definitions;
+  display.append(title, phonetic)
 
-    const synonyms = document.createElement("p");
-    synonyms.textContent = data.synonyms.length
-      ? `Synonyms: ${data.synonyms.join(", ")}`
-      : "No synonyms found";
-    
-    display.append(title, phonetic)
-
-    if (data.audio) {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.textContent = "Audio";
-      button.addEventListener("click", () => {
-        new Audio(data.audio).play().catch((err) => {
-          console.error(err);
-          showError("Couldn't play the audio for this word.");
-        });
+  if (data.audio) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = "Audio";
+    button.addEventListener("click", () => {
+      new Audio(data.audio).play().catch((err) => {
+        console.error(err);
+        showError("Couldn't play the audio for this word.");
       });
-      display.append(button);
-    }
+    })
 
-    display.append(definition, synonyms)
+    display.append(button);
+  };
+
+  data.meanings.forEach((meaning) => {
+  const heading = document.createElement("h3");
+  heading.textContent = meaning.partOfSpeech;
+
+  const list = document.createElement("ol");
+  meaning.definitions.forEach((d) => {
+    const li = document.createElement("li");
+    li.textContent = d.definition;   
+    list.append(li);
+  });
+
+  const synonyms = document.createElement("p");
+  synonyms.textContent = meaning.synonyms.length
+    ? `Synonyms: ${meaning.synonyms.join(", ")}`
+    : "";
+
+    display.append(heading, list, synonyms);
+  });
+
 }
 
 function clearDisplayWords() {
@@ -96,7 +108,6 @@ async function fetchWords(word) {
     try{
         const response = await fetch(`${wordsApi}/${encodeURIComponent(query)}`);
         const data = await response.json()
-        console.log(data)
         if(!response.ok) {
             throw new Error(data.message || data.title || "Word not found")
         }
@@ -110,6 +121,7 @@ async function fetchWords(word) {
          error instanceof TypeError
             ? "Couldn't reach the dictionary service. Please try again in a moment."
             : error.message;
+        clearDisplayWords()
         showError(message);
     }
 }
